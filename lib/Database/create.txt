@@ -1,0 +1,50 @@
+CREATE DATABASE IF NOT EXISTS qsw;
+USE qsw;
+
+CREATE TABLE usuarios (
+    usuario_id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    senha VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE modulos (
+    modulo_id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE disciplinas (
+    disciplina_id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(255) NOT NULL,
+    descricao TEXT,
+    modulo_id INT, 
+    FOREIGN KEY (modulo_id) REFERENCES modulos(modulo_id) 
+);
+
+CREATE TABLE pre_requisitos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    disciplina_id INT NOT NULL,
+    pre_requisito_id INT NOT NULL,
+    FOREIGN KEY (disciplina_id) REFERENCES disciplinas(disciplina_id),
+    FOREIGN KEY (pre_requisito_id) REFERENCES disciplinas(disciplina_id)
+);
+
+CREATE TABLE turmas (
+    turma_id INT PRIMARY KEY AUTO_INCREMENT,
+	nome VARCHAR(9) NOT NULL,
+    disciplina_id INT NOT NULL,
+    professor_nome VARCHAR(255) NOT NULL,
+    horario_inicio TIME NOT NULL,
+    horario_termino TIME NOT NULL,
+    turma_fechada BOOLEAN NOT NULL DEFAULT 0,
+    FOREIGN KEY (disciplina_id) REFERENCES disciplinas(disciplina_id)
+);
+
+CREATE TABLE inscricoes (
+    inscricao_id INT PRIMARY KEY AUTO_INCREMENT,
+    usuario_id INT NOT NULL,
+    turma_id INT NOT NULL,
+    data_inscricao DATE NOT NULL,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(usuario_id),
+    FOREIGN KEY (turma_id) REFERENCES turmas(turma_id)
+);
