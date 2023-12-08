@@ -30,6 +30,28 @@ class Section
         $this->isClosed = $isClosed;
     }
 
+    public static function getSectionById($classId)
+    {
+        try {
+            $conn = Connection::getConn();
+
+            $sql = 'SELECT d.nome as disciplina, t.turma_id, t.nome as turma, t.horario_inicio, t.horario_termino, t.professor_nome
+                    FROM turmas t
+                    INNER JOIN disciplinas d ON t.disciplina_id = d.disciplina_id
+                    WHERE t.turma_id = :classId';
+
+            $stmt = $conn->prepare($sql);
+            $stmt->bindValue(':classId', $classId);
+            $stmt->execute();
+
+            $classe = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $classe;
+        } catch (\Exception $e) {
+            throw new \Exception('Erro ao obter turmas por módulo: ' . $e->getMessage());
+        }
+    }
+
     public static function getSectionsByModule($moduleId)
     {
         try {

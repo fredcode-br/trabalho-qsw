@@ -65,7 +65,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <a href="http://localhost/trabalho-qsw" class="btn btn-secondary">Sair</a>
                 <div class="text-center">
-                    <button id="revisarInscricao" type="submit" class="btn btn-success" name="revisar_inscricao">Revisar Inscrição</button>
+                    <button id="revisarInscricao" type="button" class="btn btn-success" onclick="review()">Revisar Inscrição</button>
                     <button id="confirmarInscricao" type="button" class="btn btn-primary" onclick="submitForm()" name="confirmar_inscricao">Confirmar</button>
                 </div>
             </div>
@@ -83,7 +83,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                        <button type="button" class="btn btn-primary btn-wait-list d-none">Sim</button>
+                        <button type="button" class="btn btn-primary btn-wait-list d-none" onclick="entrarListaEspera()">Sim</button>
                     </div>
                 </div>
             </div>

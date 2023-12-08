@@ -30,6 +30,10 @@
 		{
 			if (isset($request['url'])){
 				$this->url = explode('/', $request['url']);
+				if( $request['url'] == 'enrollments'){
+					$this->url[0] = 'enrollment';
+					$this->url[1] = 'list';
+				}
 
 				$this->controller = ucfirst($this->url[0]).'Controller';
 				array_shift($this->url);
@@ -43,6 +47,9 @@
 					}
 				}
 			}
+
+	
+
 			
 			if ($this->user) {
 				$pg_permission = ['HomeController', 'EnrollmentController'];
