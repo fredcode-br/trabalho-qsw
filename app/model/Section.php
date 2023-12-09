@@ -52,6 +52,65 @@ class Section
         }
     }
 
+    public function storeSectionInObjectById($classId)
+    {
+        try {
+            $conn = Connection::getConn();
+    
+            $sql = 'SELECT * FROM turmas WHERE turma_id = :classId';
+            $stmt = $conn->prepare($sql);
+            $stmt->bindValue(':classId', $classId);
+            $stmt->execute();
+    
+            $sectionData = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+            if ($sectionData) {
+                $this->id = $sectionData['turma_id'];
+                $this->name = $sectionData['nome'];
+                $this->disciplineId = $sectionData['disciplina_id'];
+                $this->professorName = $sectionData['professor_nome'];
+                $this->startTime = $sectionData['horario_inicio'];
+                $this->endTime = $sectionData['horario_termino'];
+                $this->isClosed = $sectionData['turma_fechada'];
+            }
+    
+            return true; // Return true upon successful update
+        } catch (\Exception $e) {
+            throw new \Exception('Error updating section information: ' . $e->getMessage());
+        }
+    }
+
+    public function updateSectionInDatabase()
+    {
+        try {
+            $conn = Connection::getConn();
+
+            $sql = 'UPDATE turmas SET 
+                nome = :name,
+                disciplina_id = :disciplineId,
+                professor_nome = :professorName,
+                horario_inicio = :startTime,
+                horario_termino = :endTime,
+                turma_fechada = :isClosed 
+                WHERE turma_id = :id';
+
+            $stmt = $conn->prepare($sql);
+            $stmt->bindValue(':name', $this->name);
+            $stmt->bindValue(':disciplineId', $this->disciplineId);
+            $stmt->bindValue(':professorName', $this->professorName);
+            $stmt->bindValue(':startTime', $this->startTime);
+            $stmt->bindValue(':endTime', $this->endTime);
+            $stmt->bindValue(':isClosed', $this->isClosed);
+            $stmt->bindValue(':id', $this->id);
+
+            $stmt->execute();
+
+            return true; // Return true upon successful update
+        } catch (\Exception $e) {
+            throw new \Exception('Error updating section in the database: ' . $e->getMessage());
+        }
+    }
+
     public static function getSectionsByModule($moduleId)
     {
         try {
@@ -110,7 +169,7 @@ class Section
 
         if ($qtd == 1) {
             $rowInscrito = $stmt->fetch(PDO::FETCH_ASSOC);
-            return 'Você já está inscrito na turma ' . $rowInscrito['nome'] .' de '. $disciplina;
+            return 'Você já está inscrito na turma ' . $rowInscrito['nome'] . ' de ' . $disciplina;
         }
 
         return '';
@@ -156,12 +215,12 @@ class Section
                     ($horarioInicioDesejado <= $horarioTerminoInscrito && $horarioTerminoDesejado >= $horarioInicioInscrito) ||
                     ($horarioInicioInscrito <= $horarioTerminoDesejado && $horarioTerminoInscrito >= $horarioInicioDesejado)
                 ) {
-                    return "A ". $rowTurmaDesejada['nome'] ." da ". $disciplina ." está em choque de horários com a outra turma a qual você está inscrito(a). Selecione outra turma.";
+                    return "A " . $rowTurmaDesejada['nome'] . " da " . $disciplina . " está em choque de horários com a outra turma a qual você está inscrito(a). Selecione outra turma.";
                 }
             }
         }
 
-        return ''; 
+        return '';
     }
 
     public function getId()
