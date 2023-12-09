@@ -58,15 +58,17 @@ class InscricaoTest extends TestCase
         $enrollment->enroll($userId, $classId);
     }
 
-    // public function testdisciplinaComPrerequisito(){
-    //     // Simula uma inscricao mal sucedida devido ao pre-requisito
-    //     $turmaDaDisciplinaComPreRequisito = 1;
-    //     $userId = 1; // ID do usuário
-    //     $enrollment = new Enrollment(null, $userId, $turmaDaDisciplinaComPreRequisito);
-    //     $this->expectException(Exception::class);
-    //     $enrollment->enroll($userId, $turmaDaDisciplinaComPreRequisito);
+    public function testdisciplinaComPrerequisito(){
+        // Simula uma inscricao mal sucedida devido ao pre-requisito
+        $disciplinaPreRequisito = 1;
+        $turmaDaDisciplinaComPreRequisito = 1;
+        $userId = 1; // ID do usuário
+        $enrollment = new Enrollment(null, $userId, $turmaDaDisciplinaComPreRequisito);
+        $enrollment = new Enrollment(null, $userId, $turmaDaDisciplinaComPreRequisito);
+        $this->expectException(Exception::class);
+        $enrollment->enroll($userId, $turmaDaDisciplinaComPreRequisito);
 
-    // }
+    }
 
    
     public function testConflitoDeHorario()
@@ -76,16 +78,14 @@ class InscricaoTest extends TestCase
         $userId = 1; // ID do usuário
         $classId = 2; // ID da turma
        
-        // $mockConnection = $this->getMockBuilder(Connection::class)
-        // ->disableOriginalConstructor()
-        // ->getMock();
+        $mockConnection = $this->getMockBuilder(Connection::class)
+        ->disableOriginalConstructor()
+        ->getMock();
 
-        // // Replace the actual Connection::getConn() method with the mock
-        // $this->getMockBuilder(Section::class)->getMock()
-        // ->method('updateSectionInDatabase');
-       
-
-
+        // Replace the actual Connection::getConn() method with the mock
+        $this->getMockBuilder(Section::class)->getMock()
+        ->method('updateSectionInDatabase');
+        
         $this->abrirTurma($classId);
         $enrollment = new Enrollment(null, $userId, $classId);
         $enrollment->enroll($userId, $classId);
