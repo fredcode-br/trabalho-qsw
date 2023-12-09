@@ -65,16 +65,17 @@
 
             $jsonResults = json_encode($resuls);
             echo $jsonResults;
-            return $jsonResults;
         }
 
         public function review() {
             $moduleId = 1;
             $classes = array();
-
+            $estaSetado  = isset($_POST['selectedClasses']);
+            if ($estaSetado){
             foreach ($_POST['selectedClasses'] as $classId) {
                 array_push($classes, Section::getSectionById($classId));
             }
+        }
 
             $loader = new \Twig\Loader\FilesystemLoader('app/view');
             $twig = new \Twig\Environment($loader, [
