@@ -24,10 +24,10 @@ class RegisterController
             $user->setPassword($_POST['password']);
             $user->validateRegistration();
 
-            header('Location: http://localhost/trabalho-qsw/login');
+            header('Location: /trabalho-qsw/login');
         } catch (\Exception $e) {
             $_SESSION['msg_error'] = array('msg' => $e->getMessage(), 'count' => 0);
-            header('Location: http://localhost/trabalho-qsw/register');
+            header('Location: /trabalho-qsw/register');
         }
     }
 }

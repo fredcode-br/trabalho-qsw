@@ -78,7 +78,7 @@ function submitReviewForm(){
 
 function inscrever(turma_id) {
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://localhost/trabalho-qsw/enrollment/inscribe', true);
+    xhr.open('POST', '/trabalho-qsw/enrollment/inscribe', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
 
     xhr.onreadystatechange = function () {
@@ -97,7 +97,7 @@ function entrarListaEspera() {
     const btnWaitList = document.querySelector('.btn-wait-list')
     turma_id = btnWaitList.id;
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://localhost/trabalho-qsw/enrollment/waitlist', true);
+    xhr.open('POST', '/trabalho-qsw/enrollment/waitlist', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     
     xhr.onreadystatechange = function () {
@@ -116,7 +116,7 @@ function entrarListaEspera() {
 
 function checkInscricao(turmasSelecionadas) {
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://localhost/trabalho-qsw/enrollment/check', true);
+    xhr.open('POST', '/trabalho-qsw/enrollment/check', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     
     xhr.onreadystatechange = function () {
@@ -184,12 +184,12 @@ function checkInscricao(turmasSelecionadas) {
 }
 
 function success(){
-    window.location.href = 'http://localhost/trabalho-qsw/enrollment/success';
+    window.location.href = '/trabalho-qsw/enrollment/success';
 }
 
 function excluirInscricao(inscricaoId){
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://localhost/trabalho-qsw/enrollment/unsubscribe', true);
+    xhr.open('POST', '/trabalho-qsw/enrollment/unsubscribe', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     
     xhr.onreadystatechange = function () {

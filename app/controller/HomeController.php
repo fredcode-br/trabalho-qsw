@@ -21,6 +21,6 @@
             unset($_SESSION['usr']);
             session_destroy();
 
-            header('Location: http://localhost/trabalho-qsw');
+            header('Location: /trabalho-qsw');
         }
     }

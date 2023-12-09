@@ -23,11 +23,11 @@ class LoginController
                 $user->setPassword($_POST['password']);
                 $user->validateLogin();
 
-                header('Location: http://localhost/trabalho-qsw/home');
+                header('Location: /trabalho-qsw/home');
             } catch (\Exception $e) {
                 $_SESSION['msg_error'] = array('msg' => $e->getMessage(), 'count' => 0);
 
-                header('Location: http://localhost/trabalho-qsw/login');
+                header('Location: /trabalho-qsw/login');
             }
             
         }
