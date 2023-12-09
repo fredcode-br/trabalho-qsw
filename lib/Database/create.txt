@@ -48,3 +48,5 @@ CREATE TABLE inscricoes (
     FOREIGN KEY (usuario_id) REFERENCES usuarios(usuario_id),
     FOREIGN KEY (turma_id) REFERENCES turmas(turma_id)
 );
+
+
