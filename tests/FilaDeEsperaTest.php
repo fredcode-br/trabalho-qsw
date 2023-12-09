@@ -32,4 +32,6 @@ class FilaDeEsperaTest extends TestCase
         Wait::insertIntoWaitList($userId, $turma);
     }
 
+    
+
 }
