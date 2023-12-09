@@ -1,7 +1,7 @@
 <?php
 
     use Database\Connection;
-
+   
     class User
     {
         private $id;
@@ -9,9 +9,22 @@
         private $email;
         private $password;
 
+        private $conn;
+
+        public function __construct($conn=null)
+        {
+            $this->conn = $conn;
+        }
+
         public function validateLogin()
         {
-            $conn = Connection::getConn();
+            $conn = null;
+            if($this->conn){
+                $conn = $this->conn;
+            }else{
+                $conn = Connection::getConn();
+            }
+             
             $sql = 'SELECT * FROM usuarios WHERE email = :email';
 
             $stmt = $conn->prepare($sql);
@@ -36,7 +49,12 @@
 
         public function validateRegistration()
     {
-        $conn = Connection::getConn();
+        $conn=null;
+        if($this->conn){
+            $conn = $this->conn;
+        }else{
+            $conn = Connection::getConn();
+        }
         $emailCheckSql = 'SELECT * FROM usuarios WHERE email = :email';
 
         $emailCheckStmt = $conn->prepare($emailCheckSql);

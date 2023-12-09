@@ -32,9 +32,13 @@
             return $template->render($parameters);
         }
 
-        public function check() {
+        public function check($arrayData=null) {
+            if($arrayData){
+                $data = $arrayData;
+            }
+            else{
             $data = json_decode(file_get_contents('php://input'), true);
-
+            }
             $usuarioId = $_SESSION['usr']['id_user'];
             $resuls = array();
             
@@ -61,6 +65,7 @@
 
             $jsonResults = json_encode($resuls);
             echo $jsonResults;
+            return $jsonResults;
         }
 
         public function review() {
@@ -106,9 +111,13 @@
             return $template->render($parameters);
         }
 
-        public function unsubscribe()
+        public function unsubscribe($dataTest=null)
         {
+            if($dataTest){
+                $data = $dataTest;
+            }else{
             $data = json_decode(file_get_contents('php://input'), true);
+            }
             $inscricaoId = $data['inscricaoId'];
 
             $result = Enrollment::unenroll($inscricaoId);
@@ -117,7 +126,7 @@
         }
 
 
-        public function inscribe()
+        public function inscribe($testData=null)
         {
             $usuarioId = $_SESSION['usr']['id_user'];
             $data = json_decode(file_get_contents('php://input'), true);

@@ -45,7 +45,7 @@ class Enrollment
     {
         try {
             $conn = Connection::getConn();
-            $aberto = Section::getSectionInfo($classId, null) == '';
+            $aberto = Section::getSectionInfo($classId,null,null) == '';
             
             if (!$aberto) { throw new Exception('Turma Fechada');}
             $sql = 'INSERT INTO inscricoes (usuario_id, turma_id, data_inscricao) 

@@ -1,7 +1,6 @@
 <?php
 
 use Database\Connection;
-
 class Section
 {
     private $id;
@@ -12,6 +11,7 @@ class Section
     private $endTime;
     private $isClosed;
 
+    private $conn;
     public function __construct(
         $id = null,
         $name = null,
@@ -19,7 +19,8 @@ class Section
         $professorName = null,
         $startTime = null,
         $endTime = null,
-        $isClosed = 0
+        $isClosed = 0,
+        $conn=null
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -28,13 +29,19 @@ class Section
         $this->startTime = $startTime;
         $this->endTime = $endTime;
         $this->isClosed = $isClosed;
+        $this->conn = $conn;
     }
 
-    public static function getSectionById($classId)
+    public static function getSectionById($classId, $mockedConn=null)
     {
         try {
-            $conn = Connection::getConn();
+            $conn=null;
 
+            if($mockedConn){
+                $conn = $mockedConn;
+            }else{
+                $conn = Connection::getConn();
+            }
             $sql = 'SELECT d.nome as disciplina, t.turma_id, t.nome as turma, t.horario_inicio, t.horario_termino, t.professor_nome
                     FROM turmas t
                     INNER JOIN disciplinas d ON t.disciplina_id = d.disciplina_id
@@ -55,7 +62,13 @@ class Section
     public function storeSectionInObjectById($classId)
     {
         try {
-            $conn = Connection::getConn();
+            $conn=null;
+            if($this->conn){
+                $conn = $this->conn;
+            }else{
+                $conn = Connection::getConn();
+            }
+            
     
             $sql = 'SELECT * FROM turmas WHERE turma_id = :classId';
             $stmt = $conn->prepare($sql);
@@ -83,7 +96,13 @@ class Section
     public function updateSectionInDatabase()
     {
         try {
-            $conn = Connection::getConn();
+            $conn=null;
+
+            if ($this->conn){
+                $conn = $this->conn;
+            }else{
+                $conn = Connection::getConn();
+            }
 
             $sql = 'UPDATE turmas SET 
                 nome = :name,
@@ -111,10 +130,15 @@ class Section
         }
     }
 
-    public static function getSectionsByModule($moduleId)
+    public static function getSectionsByModule($moduleId, $mockedConn=null)
     {
         try {
-            $conn = Connection::getConn();
+            $conn=null;
+            if ($mockedConn){
+                $conn = $mockedConn;
+            }else{
+                $conn = Connection::getConn();
+            }
 
             $sql = 'SELECT d.disciplina_id, d.nome as disciplina, t.turma_id, t.nome as turma, t.horario_inicio, t.horario_termino, t.professor_nome
                     FROM turmas t
@@ -133,15 +157,18 @@ class Section
         }
     }
 
-    public static function getSectionInfo($turmaId, $disciplina)
+    public static function getSectionInfo($turmaId, $disciplina, $mockedConn=null)
     {
-        $conn = Connection::getConn();
-
+        $conn=null;
+        if ($mockedConn){
+            $conn = $mockedConn;
+        }else{
+            $conn = Connection::getConn();
+        }
         $sql = "SELECT turma_fechada, nome FROM turmas WHERE turma_id = :turma_id";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':turma_id', $turmaId);
         $stmt->execute();
-
         $rowTurmaFechada = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($rowTurmaFechada && $rowTurmaFechada['turma_fechada']) {
@@ -151,9 +178,14 @@ class Section
         return '';
     }
 
-    public static function isUserEnrolled($usuarioId, $turmaId, $disciplina)
+    public static function isUserEnrolled($usuarioId, $turmaId, $disciplina, $mockedConn=null)
     {
-        $conn = Connection::getConn();
+        $conn=null;
+        if ($mockedConn){
+            $conn = $mockedConn;
+        }else{
+            $conn = Connection::getConn();
+        }
 
         $sql = "SELECT turmas.nome 
                 FROM inscricoes
@@ -175,9 +207,15 @@ class Section
         return '';
     }
 
-    public static function checkScheduleConflict($usuarioId, $turmaId, $disciplina)
+    public static function checkScheduleConflict($usuarioId, $turmaId, $disciplina, $mockedConn=null)
     {
-        $conn = Connection::getConn();
+        $conn=null;
+        if ($mockedConn){
+            $conn = $mockedConn;
+        }else{
+            $conn = Connection::getConn();
+        }
+
 
         $sql = "SELECT turmas.turma_id, turmas.horario_inicio, turmas.horario_termino 
                 FROM turmas
@@ -221,6 +259,47 @@ class Section
         }
 
         return '';
+    }
+
+    public static function abrirTurma($classId, $mockedConn=null){
+        try{
+            $conn=null;
+            $turma=null;
+            if ($mockedConn){
+                $conn = $mockedConn;
+                $turma = new Section($mockedConn);
+            }else{
+                $conn = Connection::getConn();
+                $turma = new Section();
+            }
+        $turma->storeSectionInObjectById($classId);
+        $turma->setIsClosed(0);
+        $turma->updateSectionInDatabase();
+        return True;
+        } catch(Exception $e){
+            return False;
+        }
+    }
+
+    public static function fecharTurma($classId, $mockedConn=null){
+        try {
+            $conn=null;
+            $turma=null;
+            if ($mockedConn){
+                $conn = $mockedConn;
+                $turma = new Section($mockedConn);
+            }else{
+                $conn = Connection::getConn();
+                $turma = new Section();
+            }
+            $turma->storeSectionInObjectById($classId);
+            $turma->setIsClosed(1);
+            $turma->updateSectionInDatabase();
+            return True;
+        } catch (Exception $e){ 
+            return False;
+        }
+      
     }
 
     public function getId()
@@ -296,8 +375,13 @@ class Section
     public function getClasses()
     {
         try {
-            $conn = Connection::getConn();
-
+            $conn=null;
+          
+            if ($this->conn){
+                $conn = $this->conn;
+            }else{
+                $conn = Connection::getConn();
+            }
             $sql = 'SELECT * FROM turmas';
             $stmt = $conn->prepare($sql);
             $stmt->execute();
