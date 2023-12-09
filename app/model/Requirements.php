@@ -62,4 +62,6 @@ class Requirement
             throw new \Exception('Erro ao obter requisitos: ' . $e->getMessage());
         }
     }
+
+    
 }

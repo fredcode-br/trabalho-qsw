@@ -20,7 +20,9 @@ class InscricaoTest extends TestCase
         $turma->updateSectionInDatabase();
     }
 
-
+    /**
+     * @covers Enrollment::enroll
+     */
     public function testInscricaoBemSucedida()
     {
         // Simula um usuário e uma turma para inscrição
@@ -35,6 +37,9 @@ class InscricaoTest extends TestCase
         $this->assertGreaterThan(0, $enrollmentId);
     }
 
+    /**
+     * @covers Enrollment::enroll
+     */
     public function testInscricaoMalSucedidaComTurmaFechada()
     {
         // Simula um usuário e uma turma para inscrição
@@ -67,7 +72,9 @@ class InscricaoTest extends TestCase
 
     }
 
-   
+   /**
+     * @covers Section::checkScheduleConflict
+     */
     public function testConflitoDeHorario()
     {
         // Simula um usuário e uma turma para inscrição
@@ -86,6 +93,9 @@ class InscricaoTest extends TestCase
         $this->assertTrue($confilto=='');
     }
 
+    /**
+     * @covers Enrollment::enroll
+     */
     public function testInscricaoSemTurma(){
         // Simula uma inscricao mal sucedida devido a Inscricao Sem Turma
         $turmaInexistente = 0;
@@ -95,6 +105,9 @@ class InscricaoTest extends TestCase
         $enrollment->enroll($userId, $turmaInexistente);
     }
 
+    /**
+     * @covers Enrollment::enroll
+     */
     public function testInscricaoSemUsuario(){
         // Simula uma inscricao mal sucedida devido a Inscricao Sem Usuario
         $turmaInexistente = 1;
@@ -105,12 +118,18 @@ class InscricaoTest extends TestCase
         $enrollment->enroll($userId, $turmaInexistente);
     }
 
+    /**
+     * @covers Enrollment::unenroll
+     */
     public function testRemoverInscricao(){
         // Simula uma remocao de inscricao bem sucedida
         $inscricaoId = 1; // ID do usuário 
         $enrollment=Enrollment::unenroll($inscricaoId);
         $this->assertTrue($enrollment);
     }
+    /**
+     * @covers Enrollment::unenroll
+     */
     public function testRemoverInscricaoMalSucedida(){
         // Simula uma remocao de inscricao mal sucedida
         $inscricaoId = 0; // ID do usuário 

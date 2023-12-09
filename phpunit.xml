@@ -1,0 +1,17 @@
+<!-- phpunit.xml -->
+
+<phpunit bootstrap="bootstrap.php">
+    <!-- Other PHPUnit configurations -->
+    <testsuites>
+        <testsuite name="My Test Suite">
+            <directory>tests</directory>
+            <!-- Add more directories if needed -->
+        </testsuite>
+    </testsuites>
+  
+    <coverage>
+        <include>
+            <directory>tests</directory>
+        </include>
+    </coverage>
+</phpunit>
