@@ -65,7 +65,6 @@ function listarTurmasSelecionadas(){
     return turmasSelecionadas;
 }
 
-
 function submitForm() {
     const turmasSelecionadas = obterTurmasSelecionadas();
     checkInscricao(turmasSelecionadas);
@@ -76,7 +75,7 @@ function submitReviewForm(){
     checkInscricao(turmasSelecionadas);
 }
 
-function inscrever(turma_id) {
+async function inscrever(turma_id) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/trabalho-qsw/enrollment/inscribe', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -113,13 +112,48 @@ function entrarListaEspera() {
     xhr.send(dados);
 }
 
+function waitForModalClose() {
+    return new Promise(resolve => {
+        const closeModalButtons = document.querySelectorAll('[data-bs-dismiss="modal"]');
+        
+        closeModalButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                resolve();
+            });
+        });
+    });
+}
+
+async function processarResposta(resp) {
+    var myModal = new bootstrap.Modal(document.getElementById('myModal'));
+    const textModal = document.getElementById('modal-text');
+    const textWaitList = document.getElementById('wait-list-text');
+    const btnWaitList = document.querySelector('.btn-wait-list')
+    if (resp.status !== '') {
+        myModal.show();
+        modalShown = true;
+
+        if (resp.wait) {
+            textModal.innerText = resp.status + " Você já está na lista de espera.";
+        } else {
+            textModal.innerText = resp.status;
+            textWaitList.classList.replace('d-none', 'd-block');
+            btnWaitList.classList.replace('d-none', 'd-block');
+            btnWaitList.setAttribute('id', resp.turma_id)
+            btnWaitList.disabled = false;
+        }
+        await waitForModalClose();
+    } else {
+        await inscrever(resp.turma_id);
+    }
+}
 
 function checkInscricao(turmasSelecionadas) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/trabalho-qsw/enrollment/check', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     
-    xhr.onreadystatechange = function () {
+    xhr.onreadystatechange = async function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
             var resp = JSON.parse(xhr.responseText);
             
@@ -150,31 +184,11 @@ function checkInscricao(turmasSelecionadas) {
                 var modalShown = false;
             
                 for (var i = 0; i < resp.length; i++) {
-                    if (resp[i].status !== '') {
-                        myModal.show();
-                        modalShown = true;
-            
-                        if (resp[i].wait) {
-                            textModal.innerText = resp[i].status + " Você já está na lista de espera.";
-                        } else {
-                            textModal.innerText = resp[i].status;
-                            textWaitList.classList.replace('d-none', 'd-block');
-                            btnWaitList.classList.replace('d-none', 'd-block');
-                            btnWaitList.setAttribute('id', resp[i].turma_id)
-                            btnWaitList.disabled = false;
-            
-                            if (i === resp.length - 1 && !myModal._isShown) {
-                                
-                                // criar lógica para redirecionar somente se o modal estiver fechado e for
-                                // a ultima iteração
-
-                                success();
-                            }
-                        }
-                    } else {
-                        inscrever(resp[i].turma_id);
+                    await processarResposta(resp[i])
+                    if (i === resp.length - 1) {        
+                        success();
                     }
-                }
+                }   
             }   
         }
     };
