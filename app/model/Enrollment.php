@@ -53,7 +53,7 @@ class Enrollment
             $stmt->bindValue(':classId', $classId, PDO::PARAM_INT);
             $stmt->execute();
 
-            return $conn->lastInsertId();
+            return (int) $conn->lastInsertId();
         } catch (\Exception $e) {
             throw new \Exception('Erro ao se inscrever na turma: ' . $e->getMessage());
         }
