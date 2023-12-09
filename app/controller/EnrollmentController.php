@@ -129,8 +129,13 @@
 
         public function inscribe($testData=null)
         {
-            $usuarioId = $_SESSION['usr']['id_user'];
+            if($testData){
+                $data = $testData;
+            }else{
             $data = json_decode(file_get_contents('php://input'), true);
+            }
+            $usuarioId = $_SESSION['usr']['id_user'];
+            
             $turmaId = $data['turmaId'];
             
             $result = Enrollment::enroll($usuarioId, $turmaId);
@@ -138,10 +143,16 @@
             echo $jsonResult;
         }
 
-        public function waitlist()
+        public function waitlist($testData=null)
         {
             $usuarioId = $_SESSION['usr']['id_user'];
-            $data = json_decode(file_get_contents('php://input'), true);
+            $data = null;
+            if ($testData){
+                 $data = $testData;
+            }
+            else{
+                $data = json_decode(file_get_contents('php://input'), true);
+            }
             $turmaId = $data['turmaId'];
             
             Wait::insertIntoWaitList($usuarioId, $turmaId);

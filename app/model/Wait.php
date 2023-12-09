@@ -63,7 +63,7 @@ class Wait
     {
         try {
             $conn = Connection::getConn();
-
+            $turma = Section::getSectionById($classId);
             $sql = 'INSERT INTO lista_espera (usuario_id, turma_id, data_entrada) 
                     VALUES (:userId, :classId, NOW())';
             $stmt = $conn->prepare($sql);
