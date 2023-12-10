@@ -80,7 +80,7 @@ class InscricaoControllerTest extends TestCase
         ob_start();
         $controller->unsubscribe($dataTest);
         $jsonResult = ob_get_clean();
-        $this->assertStringContainsString('', $jsonResult);
+        $this->assertStringContainsString('true', $jsonResult);
     }
     // Teste para o cenário em que não há dados válidos passados para o método unsubscribe
     public function testUnsubscribeComDadosInvalidos()
@@ -96,7 +96,7 @@ class InscricaoControllerTest extends TestCase
         ob_start();
         $controller->unsubscribe($dataTest);
         $jsonResult = ob_get_clean();
-        $this->assertStringContainsString('', $jsonResult);
+        $this->assertFalse((bool) $jsonResult);
         
     }
 
@@ -113,7 +113,7 @@ class InscricaoControllerTest extends TestCase
         ob_start();
         $controller->inscribe($dataTest);
         $jsonResult = ob_get_clean();
-        $this->assertStringContainsString('', $jsonResult);
+        $this->assertTrue(is_int($jsonResult));
 
     }
 
@@ -131,7 +131,7 @@ class InscricaoControllerTest extends TestCase
         ob_start();
         $controller->inscribe($dataTest);
         $jsonResult = ob_get_clean();
-        $this->assertStringContainsString('', $jsonResult);
+        $this->assertTrue($jsonResult == 'false');
 
     }
 
@@ -150,12 +150,13 @@ class InscricaoControllerTest extends TestCase
         ob_start();
         $controller->waitlist($dataTest);
         $jsonResult = ob_get_clean();
-        $this->assertStringContainsString('', $jsonResult);
+        $this->assertTrue(is_int($jsonResult));
     }
 
     // cenario de teste com dados de turma inválidos
     public function testListaDeEsperaComDadosInvalidos()
-    {  
+    {        
+        $this->expectException(Exception::class);
         $_SESSION['usr'] = array(
             'id_user' => '0',
             'name_user' => 'Joao'
@@ -170,7 +171,7 @@ class InscricaoControllerTest extends TestCase
         // Chama o método waitlist
         $controller->waitlist($dataTest);
         $jsonResult = ob_get_clean();
-        $this->assertStringContainsString('', $jsonResult);
+       
         
     }
 
