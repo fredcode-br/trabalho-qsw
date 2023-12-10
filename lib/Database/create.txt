@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS qsw;
+ CREATE DATABASE IF NOT EXISTS qsw;
 USE qsw;
 
 CREATE TABLE usuarios (
@@ -31,7 +31,7 @@ CREATE TABLE pre_requisitos (
 
 CREATE TABLE turmas (
     turma_id INT PRIMARY KEY AUTO_INCREMENT,
-	nome VARCHAR(9) NOT NULL,
+    nome VARCHAR(9) NOT NULL,
     disciplina_id INT NOT NULL,
     professor_nome VARCHAR(255) NOT NULL,
     horario_inicio TIME NOT NULL,
@@ -49,4 +49,11 @@ CREATE TABLE inscricoes (
     FOREIGN KEY (turma_id) REFERENCES turmas(turma_id)
 );
 
-
+CREATE TABLE lista_espera (
+    espera_id INT PRIMARY KEY AUTO_INCREMENT,
+    usuario_id INT NOT NULL,
+    turma_id INT NOT NULL,
+    data_entrada TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(usuario_id),
+    FOREIGN KEY (turma_id) REFERENCES turmas(turma_id)
+);
